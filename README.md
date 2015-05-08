@@ -26,3 +26,4 @@ invizbox-firmware/
 invizbox-luci/
  This folder contains the luci UI and configuration files to setup invizbox.
 
+
