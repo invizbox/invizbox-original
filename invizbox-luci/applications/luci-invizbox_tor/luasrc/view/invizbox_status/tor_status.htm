@@ -1,0 +1,124 @@
+<%#
+Copyright 2015 InvizBox Ltd
+
+Licensed under the InvizBox Shared License;
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+        https://www.invizbox.io/license.txt
+
+-%>
+<%
+nixio = require("nixio")
+sock = nixio.socket("inet", "stream")
+-- A boo - can't getdd the unix socket to work - using TCP
+-- sock = nixio.socket("unix", "stream")
+-- sock:connect("/var/lib/tor/c.sock")
+
+function tor_request(command)
+	if not sock:send(command) then
+		return false, "Cannot send the command to Tor"
+	end
+	reply = ""
+	resp = sock:recv(1000)
+	while resp do
+		reply = reply .. resp
+		if string.len(resp) < 1000 then break end
+		resp = sock:recv(1000)
+	end
+
+	if not resp then
+		return false, "Cannot read the response from Tor"
+	end
+	i, j = string.find(reply, "^%d%d%d")
+	if j ~= 3 then
+		return false, "Malformed response from Tor"
+	end
+	code = string.sub(reply, i, j)
+	if code ~= "250" and (code ~= "650" or command ~= "") then
+		return false, "Tor responded with an error: " .. reply
+	end
+
+	return true, reply
+end
+%>
+
+<%+header%>
+
+<h2><%:Tor Network Status%></h2>
+
+<%-if not reboot then 
+-%>
+<p><a href="<%=controller%>/invizbox/torstatus/restart?reboot=1"><%:Tor Restart%></a></p>
+<p><%:Refreshing in 30 seconds: .....%></p>
+<script type="text/javascript">setTimeout("location='<%=controller%>/invizbox/torstatus/status'", 30000)</script>
+<%- else -%>
+<p><%:Please wait: Tor restarting...%></p>
+<script type="text/javascript">setTimeout("location='<%=controller%>/invizbox/torstatus/status'", 6000)</script>
+<%- end -%>
+<%
+if sock and sock:connect("127.0.0.1", 9051) then
+	res, data = tor_request("AUTHENTICATE \"\"\r\n")
+	if not res then
+		print(data)
+		return
+	end
+
+	res, data = tor_request("GETINFO status/circuit-established\r\n")
+	if not res then
+		print(data)
+	else
+		status = string.sub(data, string.find(data,"=%d*"))
+		if status == "=1" then 
+			print("Connected to the Tor network<br/>")
+			string.gsub(data,"","")
+		else 
+			print("Not connected to the Tor network<br/>") 
+		end
+	end
+    res, data = tor_request("GETINFO version\r\n")
+    if not res then
+        torstatus = data
+    else 
+        print(string.match(data, "%d.%d.%d.%d+"))
+        print(" : ")
+    end 
+    res, data = tor_request("GETINFO status/version/current\r\n")
+    if not res then 
+        torstatus = data
+    else  
+        print(string.match(data,"%w+",string.find(data,"=")))
+    end  
+
+	res, data = tor_request("GETINFO circuit-status\r\n")
+	if not res then
+		print(data)
+        else
+		print("<br/><br/>Circuits:<pre>\n" .. string.gsub(string.gsub(string.gsub(data,"\r\n250 .+$",""),"^250\+[^\n]*",""),"\n.\r","") .. "</pre>\n")
+	end
+        res, data = tor_request("SETEVENTS bw\r\n")
+        if not res then
+                print(data)
+        end
+        res, data = tor_request("")
+        if not res then
+                print(data)
+        else
+                print("<br/><br/>Bandwidth:<pre>\n" .. string.gsub(data,"^650 BW ","") .. "</pre>\n")
+        end
+        res, data = tor_request("SETEVENTS\r\n")
+        if not res then
+                print(data)
+        end
+	res, data = tor_request("QUIT\r\n")
+	if not res then
+		print(data)
+		return
+	end
+
+end
+						
+sock:close()
+%>
+
+<%+footer%>

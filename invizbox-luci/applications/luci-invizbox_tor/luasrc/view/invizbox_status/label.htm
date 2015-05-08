@@ -1,0 +1,22 @@
+<%#
+Copyright 2015 InvizBox Ltd
+
+Licensed under the InvizBox Shared License;
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+        https://www.invizbox.io/license.txt
+-%>
+<%+cbi/valueheader%>
+
+<fieldset style="pading:  10px;margin-top: 10px;">
+	<% if self.legend then %><legend><%=self.legend%></legend><% end %> 
+	<table style="table-layout:fixed; width:100%; word-wrap:break-word" "cellspacing="10">
+	<tbody><tr>
+<td width="33%"><%-=pcdata(self:cfgvalue(section))-%>
+              </td>
+	</tr>
+	</tbody></table>
+</fieldset>
+
+<%+cbi/valuefooter%>
