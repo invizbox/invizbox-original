@@ -18,7 +18,7 @@ cd openwrt
 
 Now Make InvizBox:
 
-Using the fileis from the invizbox-firware and invizbox-luci proceed to build your invizbox.
+Using the filed from the invizbox-firware and invizbox-luci proceed to build your InvizBox.
 
 ====================================
 
@@ -28,10 +28,10 @@ What the folders are
 
 invizbox-firmware/
 
- This folder contains the base Make files for Tor obfsclient etc libraries. 
+ This folder contains the base Make files for Tor, obfsclient etc. 
 
 
 invizbox-luci/
 
- This folder contains the luci UI and configuration files to setup invizbox.
+ This folder contains the luci UI and configuration files to setup InvizBox.
  
