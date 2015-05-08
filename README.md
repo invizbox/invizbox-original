@@ -2,9 +2,9 @@ To start:
 
 Get source of InvizBox
  mkdir InvizBox
- cd InvizBox
- git clone https://github.com/invizbox/invizbox.git
- 
+  cd InvizBox
+   git clone https://github.com/invizbox/invizbox.git
+   
 
 Setup build ENV:
 
@@ -25,5 +25,4 @@ invizbox-firmware/
 
 invizbox-luci/
  This folder contains the luci UI and configuration files to setup invizbox.
-
-
+ 
