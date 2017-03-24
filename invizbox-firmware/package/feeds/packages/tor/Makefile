@@ -1,18 +1,19 @@
+# Copyright (C) 2008-2014 OpenWrt.org
 #
-# Modified by InvizBox Ltd  - Copyright 2015 InvizBox Ltd
+# This is free software, licensed under the GNU General Public License v2.
+# See /LICENSE for more information.
 #
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=0.2.5.12
+PKG_VERSION:=0.2.8.9
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.torproject.org/dist \
 	https://archive.torproject.org/tor-package-archive
-PKG_MD5SUM:=89745069a7efb7aafd01ae263bd0fe5c
-
+PKG_MD5SUM:=e1f8bc2b2e2b365fc916388304e5e40d
 PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de>
 PKG_LICENSE_FILES:=LICENSE
 
@@ -39,7 +40,7 @@ endef
 define Package/tor
 $(call Package/tor/Default)
   TITLE:=An anonymous Internet communication system
-  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +SSP_SUPPORT:libssp
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt
 endef
 
 define Package/tor/description
@@ -80,16 +81,17 @@ CONFIGURE_ARGS += \
 	--with-libminiupnpc-dir="$(STAGING_DIR)/usr" \
 	--enable-nat-pmp \
 	--with-libnatpmp-dir="$(STAGING_DIR)/usr" \
-	--disable-asciidoc
+	--disable-asciidoc \
+	--disable-seccomp
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
 		--disable-gcc-hardening
 	MAKE_FLAGS += \
-		CFLAGS="$(TARGET_CFLAGS)"
+		CFLAGS="$(TARGET_CFLAGS) -std=gnu99"
 else
 	MAKE_FLAGS += \
-		CFLAGS="$(TARGET_CFLAGS) -fPIC"	
+		CFLAGS="$(TARGET_CFLAGS) -fPIC -std=gnu99"	
 endif
 
 CONFIGURE_VARS += \

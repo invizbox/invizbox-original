@@ -501,10 +501,6 @@ if hwtype == "mac80211" then
 	hidden:depends({mode="ap"})
 	hidden:depends({mode="ap-wds"})
 
-	wmm = s:taboption("general", Flag, "wmm", translate("WMM Mode"))
-	wmm:depends({mode="ap"})
-	wmm:depends({mode="ap-wds"})
-	wmm.default = wmm.enabled
 end
 
 

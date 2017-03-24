@@ -25,7 +25,6 @@ start() {
 	}
 	killall -9 obfsclient
 	service_start /usr/sbin/tor --PidFile /var/run/tor.pid
-	/etc/init.d/sysntpd restart
 }
 
 stop() {

@@ -136,7 +136,7 @@ define Package/luci-app-diag-devinfo/conffiles
 /etc/config/luci_devinfo
 endef
 
-$(eval $(call application,invizbox_tor,Extra Invizbox Tor status and config,invizbox_tor))
+$(eval $(call application,invizbox_tor,Extra Invizbox Tor status and config))
 $(eval $(call application,siitwizard,SIIT IPv4-over-IPv6 configuration wizard,kmod-siit))
 $(eval $(call application,freifunk-policyrouting,Policy routing for mesh traffic,freifunk-policyrouting))
 $(eval $(call application,freifunk-widgets,Widgets for the Freifunk index page,luci-mod-freifunk))

@@ -17,7 +17,7 @@ You may obtain a copy of the License at
 	local disp = require "luci.dispatcher"
 	local os     = require "os"
         local io = require "io"
-	
+
         local hostname = sys.hostname()
 
 	local request  = disp.context.path
@@ -43,7 +43,7 @@ You may obtain a copy of the License at
 			c._menu_selected = true
 		end
 	end
-    
+
     -- send as HTML5
 	http.prepare_content("text/html")
 
@@ -62,11 +62,11 @@ You may obtain a copy of the License at
 
 		local childs = disp.node_childs(node)
 		if #childs > 0 then
-        
+
             if level > 2 then
 %>
 	<ul class="tabs">
-		<%  
+		<%
             end
 
 			local selected_node
@@ -88,7 +88,7 @@ You may obtain a copy of the License at
 		-->
 		<%      end
 			end
-            
+
             if level > 2 then
 		%>
 	</ul>
@@ -108,14 +108,6 @@ function os.capture(cmd, raw)
   s = string.gsub(s, '%s+$', '')
   s = string.gsub(s, '[\n\r]+', ' ')
   return s
-end
-
-function check_remote_version()
-	remote_version = os.capture("curl --connect-timeout 1  --socks5-hostname 172.16.1.1:9050 --cacert /etc/ssl/certs/version.ca https://www.invizbox.io/version.txt")
-	if #remote_version > 0 then
-		return os.capture("echo " .. remote_version .. "| grep -q -f /etc/version.txt && echo '1' || echo '0'")
-	end
-	return 1 
 end
 
 
@@ -145,29 +137,21 @@ end
 
  <body class="lang_<%=luci.i18n.context.lang%> <%- if node then %><%= striptags( node.title ) %><%- end %>">
 
-
-
-
-
-
   <header>
    <div class="navbar navbar-inverse ">
     <div class="container">
-
               <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+			  <img src="<%=resource%>/icons/headericon.png" width="180" height="60" alt="logo">
+             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
               <span class="sr-only">Toggle navigation</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#"><%=hostname%></a>
           </div>
 
-
-
      <div id="navbar" class="navbar-collapse collapse">
-       
+
 <ul class="nav navbar-nav">
    <%-
     local function submenu(prefix, node)
@@ -198,7 +182,7 @@ end
         local href  = controller .. "/" .. category .. "/" .. r ..
           (nnode.query and http.build_querystring(k.query) or "")
                 local grandchildren = disp.node_childs(nnode)
-                
+
                 if #grandchildren > 0 then
   %>
         <li class="dropdown">
@@ -208,7 +192,7 @@ end
   <%          else %>
          <li>
           <a href="<%=pcdata(href)%>"><%=pcdata(striptags(translate(nnode.title)))%></a>
-        </li> 
+        </li>
     <%
                 end
       end
@@ -255,15 +239,6 @@ end
 </div>
 <%- end -%>
 
-
-<%- if check_remote_version() == '0' then -%>            
-
-<div class="container">
-	<div class="alert-message warning">
-		<h4>There is a new version of the InvizBox firmware available. <a href="https://www.invizbox.io">Click here</a> to get latest version.</h4>
-	</div>
-</div>
-<%- end -%>                                                                                                                                                    
 
 
 <div id="maincontent" class="container">

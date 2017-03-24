@@ -1,4 +1,3 @@
-
 config wifi-device 'radio0'
 	option type 'mac80211'
 	option channel '11'
@@ -16,5 +15,4 @@ config wifi-iface
 	option encryption 'psk-mixed'
 	option key 'needtochange'
 	option isolate '1'
-	option network 'wifi'
-
+	option network 'lan'

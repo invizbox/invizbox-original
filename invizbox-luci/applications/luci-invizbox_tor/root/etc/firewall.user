@@ -4,15 +4,13 @@
 #you may not use this file except in compliance with the License.
 #You may obtain a copy of the License at
 #
-#        https://www.invizbox.io/license.txt
+#        https://www.invizbox.com/lic/license.txt
 
 enable_transparent_tor() {
   iptables -t nat -A PREROUTING -p udp -m multiport --dport 3478,19302 -j REDIRECT --to-ports 9999
   iptables -t nat -A PREROUTING -p udp -m multiport --sport 3478,19302 -j REDIRECT --to-ports 9999
-  iptables -t nat -A PREROUTING -s 10.101.1.0/24 -p udp --dport 53 -j DNAT --to-destination 172.16.1.1:9053
-  iptables -t nat -A PREROUTING -s 10.101.1.0/24 \! -d 10.101.0.1 -p tcp --syn -j DNAT --to-destination 172.16.1.1:9040
-  iptables -t nat -A PREROUTING -i eth0.1 -p udp --dport 53 -j DNAT --to-destination 172.16.1.1:9053
-  iptables -t nat -A PREROUTING -i eth0.1 \! -d 10.101.0.1 -p tcp --syn -j DNAT --to-destination 172.16.1.1:9040
-
+  iptables -t nat -A PREROUTING -s 10.101.0.0/24 -p udp --dport 53 -j DNAT --to-destination 172.16.1.1:9053
+  iptables -t nat -A PREROUTING -s 10.101.0.0/24 \! -d 10.101.0.1 -p tcp --syn -j DNAT --to-destination 172.16.1.1:9040
+  iptables -t nat -A OUTPUT -d 10.192.0.0/16 -p tcp --syn -j DNAT --to-destination 172.16.1.1:9040 # local  onion routing for opkg updates
 }
 enable_transparent_tor

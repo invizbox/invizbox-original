@@ -6,7 +6,8 @@ BWC_LDFLAGS    = -ldl
 BWC_CFLAGS     =
 BWC_BIN        = luci-bwc
 BWC_OBJ        = src/luci-bwc.o
-
+PKG_VERSION:=1.4.0001
+	
 %.o: %.c
 	$(COMPILE) $(BWC_CFLAGS) $(LUA_CFLAGS) $(FPIC) -c -o $@ $<
 

@@ -98,9 +98,27 @@ You may obtain a copy of the License at
 	end
 
 	local system, model = luci.sys.sysinfo()
+
+	function check_remote_version()
+      remote_version = os.capture("curl --connect-timeout 2  --socks5 172.16.1.1:9050 --cacert /etc/ssl/certs/version.ca https://www.invizbox.com/version.txt")
+      if #remote_version > 0 then
+              return os.capture("echo " .. remote_version .. "| grep -q -f /etc/version.txt && echo '1' || echo '0'")
+      end
+      return 1
+  end
+
 -%>
 
 <%+header%>
+
+<%- if check_remote_version() == '0' then -%>
+
+<div class="container">
+        <div class="alert-message warning">
+                <h4>There is a new version of the InvizBox firmware available. <a href="https://www.invizbox.com">Click here</a> to get latest version.</h4>
+        </div>
+</div>
+<%- end -%>
 
 <script type="text/javascript" src="<%=resource%>/cbi.js"></script>
 <script type="text/javascript">//<![CDATA[
@@ -560,7 +578,7 @@ You may obtain a copy of the License at
 <fieldset class="cbi-section">
 	<legend>Tor Status</legend>
 	<table width="100%" cellspacing="10">
-		<tr><td width="33%"><%:Tor Status%></td><td id="torstatus"> 
+		<tr><td width="33%"><%:Tor Status%></td><td id="torstatus">
 <%
 	nixio = require("nixio")
 	sock = nixio.socket("inet", "stream")
@@ -588,46 +606,46 @@ You may obtain a copy of the License at
 			return false, "Tor responded with an error: " .. reply
 		end
 		return true, reply
-	end	
+	end
 	if sock and sock:connect("127.0.0.1", 9051) then
 		res, data = tor_request("AUTHENTICATE \"\"\r\n")
 			if not res then
 				return
 			end
-		res, data = tor_request("GETINFO status/circuit-established\r\n")
+		res, data = tor_request("GETINFO network-liveness\r\n")
 		if not res then
 			torstatus = data
 		else
-			status = string.sub(data, string.find(data,"=%d*"))
-			if status == "=1" then 
+			status = string.sub(data, string.find(data,"=%w*"))
+			if status == "=up" then
 				print(translate("Connected to the Tor network") .. "<br/>")
-			else 
+			else
 				print(translate("Not connected to the Tor network") .. "<br/>")
 			end
 
 		end
 
-                                                                                                                      
+
 %>              </td></tr>
                 <tr><td width="33%"><%:Tor Version%></td><td id="torversion">
-<%                      
+<%
                 res, data = tor_request("GETINFO version\r\n")
                 if not res then
                         torstatus = data
-                else 
+                else
                         print(string.match(data, "%d.%d.%d.%d+"))
                         print(" : ")
-                end 
+                end
                 res, data = tor_request("GETINFO status/version/current\r\n")
-                if not res then 
+                if not res then
                         torstatus = data
-                else  
+                else
                         print(string.match(data,"%w+",string.find(data,"=")))
                 end
-    else                                                                               
+    else
 		    print(translate("Tor Not Running - Please check Tor admin page") .. "<br/>")
 	end
-							
+
 	sock:close()
 %>
 
