@@ -1,0 +1,4 @@
+package tor
+
+config tor tor
+	option enabled '0'

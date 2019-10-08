@@ -1,0 +1,5 @@
+package openvpn
+
+config openvpn vpn
+	option config '/etc/openvpn/openvpn.conf'
+	option enabled '1'

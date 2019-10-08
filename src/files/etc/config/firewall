@@ -1,0 +1,36 @@
+config defaults 'defaults'
+	option syn_flood '1'
+	option input 'REJECT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+# Uncomment this line to disable ipv6 rules
+	option disable_ipv6	'1'
+
+# We need to accept udp packets on port 68,
+# see https://dev.openwrt.org/ticket/4108
+config rule 'dhcp'
+	option name 'Allow-DHCP-Renew'
+	option src 'wan'
+	option proto 'udp'
+	option dest_port '68'
+	option target 'ACCEPT'
+	option family 'ipv4'
+
+config zone 'wan'
+	option masq '1'
+	option mtu_fix '1'
+	option name 'wan'
+	option network 'wan'
+
+config zone 'lan'
+	option name 'lan'
+	option input 'ACCEPT'
+	list network 'lan'
+	list network 'loopback'
+
+config redirect
+	option dest_ip '10.101.0.1'
+	option dest_port '53'
+	option src 'lan'
+	option src_dport '53'
+	option target 'DNAT'

@@ -1,0 +1,1 @@
+0,30 * * * * sleep $(head /dev/urandom | tr -dc "01" | head -c 1)$(head /dev/urandom | tr -dc "0123456789" | head -c 1)m; nice -19 /usr/lib/lua/update.lua

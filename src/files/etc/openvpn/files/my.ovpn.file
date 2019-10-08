@@ -1,0 +1,12 @@
+### Using ovpn files without templates
+
+See the second entry in `/etc/config/vpn` for an example (amsterdam).
+
+I recommend that you check/change the following values in your ovpn file.
+
+```
+dev tun0           -> make sure it's tun0 as the routing will depend on it
+#persist-tun       -> make sure that line is removed or commented out as the VPN status will depend on it
+#persist-remote-ip -> make sure that line is removed or commented out as sometimes where there is no DNS the initial
+                      resolution can be wrong if you use a hostname in your OVPN file
+```

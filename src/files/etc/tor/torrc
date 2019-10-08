@@ -1,0 +1,11 @@
+Log notice syslog
+DataDirectory /var/lib/tor
+User tor
+VirtualAddrNetworkIPv4 10.192.0.0/16
+TransPort 172.31.1.1:9040
+DNSPort 172.31.1.1:9053
+AutomapHostsOnResolve 1
+ControlPort 9051
+AvoidDiskWrites 1
+ClientTransportPlugin obfs2,obfs3,scramblesuit exec /usr/bin/obfsclient
+MapAddress inviz.box 10.101.0.1
