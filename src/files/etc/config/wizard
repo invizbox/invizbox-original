@@ -1,7 +1,10 @@
 config wizard 'main'
 	option complete 'true'
-	option product_name 'InvizBox'
+	option dns_id 'opendns'
 	option flashing 'false'
+	option manual_captive_mode '0'
+	option product_name 'InvizBox'
+	option status 'Default State'
 
 config pages 'pages'
 	option show_vpn_subscription 'false'

@@ -6,7 +6,7 @@ This repository contains the code to build an InvizBox firmware (original white 
 * Edit the files in `src/files/etc/openvpn` so that they contain your own VPN configuration files
 The files that are already there contain more information to help you initially.
 
-  * `openvpn.conf` should contain your default config (aka initially selected when flashing)
+  * `openvpn_0.conf` should contain your default config (aka initially selected when flashing)
   * `files/` should contains OVPN files 
   * `templates/` can be create templates if your ovpn files are identical apart from the server IP/hostname
 
